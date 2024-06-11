@@ -94,4 +94,3 @@ class Transaction(Base):
     
     def _repr_(self):
         return f'<Transaction(date={self.date}, amount={self.amount}, category={self.category.name}, type={self.type}, description={self.description})>'
-
