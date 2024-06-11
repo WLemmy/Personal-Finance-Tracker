@@ -66,3 +66,44 @@ def create_transaction():
 
     transaction = Transaction.create(date=date_obj, amount=amount, category_id=category_id, type=type, description=description)
     print(purple + f'Created transaction: {transaction}')
+
+def delete_transaction():
+    transaction_id = int(input(Fore.YELLOW + 'Enter transaction ID to delete: '))
+    Transaction.delete(transaction_id)
+    print(purple + 'Transaction deleted.')
+
+def display_all_transactions():
+    transactions = Transaction.get_all()
+    headers = ["Date", "Amount", "Category", "Type", "Description"]
+    data = [[transaction.date, transaction.amount, transaction.category.name, transaction.type, transaction.description] for transaction in transactions]
+    print(purple + tabulate(data, headers=headers, tablefmt="grid"))
+
+def find_transaction_by_id():
+    transaction_id = int(input(Fore.YELLOW + 'Enter transaction ID: '))
+    transaction = Transaction.find_by_id(transaction_id)
+    if transaction:
+        print(purple + str(transaction))
+    else:
+        print(purple + 'Transaction not found.')
+
+def find_transaction_by_description():
+    description = input(Fore.YELLOW + 'Enter transaction description: ')
+    transaction = Transaction.find_by_description(description.lower())
+    if transaction:
+        print(purple + str(transaction))
+    else:
+        print(purple + 'Transaction not found.')
+
+def display_total_categories():
+    total = Category.total_categories()
+    print(purple + f'Total number of categories: {total}')
+
+def display_total_transactions():
+    total = Transaction.total_transactions()
+    print(purple + f'Total number of transactions: {total}')
+
+def display_total_transactions_per_category():
+    totals = Category.total_transactions_per_category()
+    for category_name, total in totals:
+        print(purple + f'Total transactions for category {category_name}: {total}')
+
