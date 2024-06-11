@@ -11,7 +11,9 @@ from helpers import (
     find_transaction_by_description,
     display_total_categories,
     display_total_transactions,
+    display_total_transaction_amount,
     display_total_transactions_per_category,
+    display_total_transactions_amount_per_category,
     
 )
 from colorama import init, Fore, Style
@@ -31,7 +33,9 @@ def print_menu():
     print(Fore.GREEN + '10. Find Transaction by Description')
     print(Fore.GREEN + '11. Display Total Categories')
     print(Fore.GREEN + '12. Display Total Transactions')
-    print(Fore.GREEN + '13. Display Total Transactions per Category')
+    print(Fore.GREEN + '13. Display Total Transaction Amount')
+    print(Fore.GREEN + '14. Display Total Transactions per Category')
+    print(Fore.GREEN + '15. Display Total Transactions Amount per Category')
     print(Fore.RED + '0. Exit')
 
 
@@ -64,7 +68,11 @@ if __name__ == '__main__':
         elif choice == '12':
             display_total_transactions()
         elif choice == '13':
+            display_total_transaction_amount()
+        elif choice == '14':
             display_total_transactions_per_category()
+        elif choice == '15':
+            display_total_transactions_amount_per_category()
         elif choice == '0':
             print(Fore.CYAN + 'Goodbye! ✋🏼')
             break

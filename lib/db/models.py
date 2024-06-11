@@ -51,6 +51,11 @@ class Category(Base):
     @classmethod
     def total_transactions_per_category(cls):
         return session.query(cls.name, func.count(Transaction.id)).join(Transaction).group_by(cls.name).all()
+    
+    @classmethod
+    def total_transactions_amount_per_category(cls):
+        totals = session.query(cls.name, func.sum(Transaction.amount)).join(Transaction).group_by(cls.name).all()
+        return totals
 
 
     def __repr__(self):
@@ -94,6 +99,13 @@ class Transaction(Base):
     @classmethod
     def total_transactions(cls):
         return session.query(func.count(cls.id)).scalar()
+    
+    @staticmethod
+    def display_total_transaction_amount():
+        session = Session()
+        total_amount = session.query(func.sum(Transaction.amount)).scalar()
+        session.close()
+        return total_amount
     
     def __repr__(self):
         return f'<Transaction(id={self.id}, date={self.date}, amount={self.amount}, category={self.category.name}, type={self.type}, description={self.description})>'

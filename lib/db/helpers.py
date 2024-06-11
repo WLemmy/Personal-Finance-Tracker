@@ -5,25 +5,21 @@ from datetime import datetime
 from tabulate import tabulate
 from sqlalchemy.exc import IntegrityError
 import re
+from models import session
+from sqlalchemy import func
+
+
 
 init(autoreset=True)
 
-purple = Fore.MAGENTA  # Define a new Fore color for purple
-
-# def create_category():
-#     name = input(Fore.YELLOW + 'Enter category name: ')
-#     category = Category.create(name)
-#     print(purple + f'Created category: {category}')
-#     headers = ["ID", "Name"]
-#     data = [[category.id, category.name]]  # Assuming the Category object has 'id' and 'name' attributes
-#     print( purple + tabulate(data, headers=headers, tablefmt="grid"))
+purple = Fore.MAGENTA  
 
 def create_category():
     while True:
         name = input(Fore.YELLOW + 'Enter category name: ')
-        if re.match(r'^[A-Za-z\s]+$', name):  # Match only letters and spaces
+        if re.match(r'^[A-Za-z\s]+$', name):  
             category = Category.create(name)
-            print(purple + f'Created category: {category}')
+            print(purple + f'Created category:')
             headers = ["ID", "Name"]
             data = [[category.id, category.name]]
             print(purple + tabulate(data, headers=headers, tablefmt="grid"))
@@ -130,8 +126,22 @@ def display_total_transactions():
     total = Transaction.total_transactions()
     print(purple + f'Total number of transactions: {total}')
 
+def display_total_transaction_amount():
+    total_amount = session.query(func.sum(Transaction.amount)).scalar()
+    total_amount_rounded = round(total_amount, 0)
+    print(purple + f'Total transaction amount: {total_amount_rounded}')
+   
+
 def display_total_transactions_per_category():
     totals = Category.total_transactions_per_category()
     for category_name, total in totals:
         print(purple + f'Total transactions for category {category_name}: {total}')
+
+def display_total_transactions_amount_per_category():
+    totals = session.query(Category.name, func.sum(Transaction.amount)).join(Transaction).group_by(Category.name).all()
+    print(purple + "Total transactions amount per category:")
+    headers = ["Category", "Total Amount"]
+    data = [[category_name, round(total_amount, 2)] for category_name, total_amount in totals]
+    print(purple + tabulate(data, headers=headers, tablefmt="grid"))
+
 
