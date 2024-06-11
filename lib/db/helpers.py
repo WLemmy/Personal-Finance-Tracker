@@ -3,27 +3,42 @@ from datetime import date
 from colorama import Fore, Style, init
 from datetime import datetime
 from tabulate import tabulate
+from sqlalchemy.exc import IntegrityError
+import re
 
 init(autoreset=True)
 
 purple = Fore.MAGENTA  # Define a new Fore color for purple
 
+# def create_category():
+#     name = input(Fore.YELLOW + 'Enter category name: ')
+#     category = Category.create(name)
+#     print(purple + f'Created category: {category}')
+#     headers = ["ID", "Name"]
+#     data = [[category.id, category.name]]  # Assuming the Category object has 'id' and 'name' attributes
+#     print( purple + tabulate(data, headers=headers, tablefmt="grid"))
+
 def create_category():
-    name = input(Fore.YELLOW + 'Enter category name: ')
-    category = Category.create(name)
-    print(purple + f'Created category: {category}')
-    headers = ["ID", "Name"]
-    data = [[category.id, category.name]]  # Assuming the Category object has 'id' and 'name' attributes
-    print( purple + tabulate(data, headers=headers, tablefmt="grid"))
+    while True:
+        name = input(Fore.YELLOW + 'Enter category name: ')
+        if re.match(r'^[A-Za-z\s]+$', name):  # Match only letters and spaces
+            category = Category.create(name)
+            print(purple + f'Created category: {category}')
+            headers = ["ID", "Name"]
+            data = [[category.id, category.name]]
+            print(purple + tabulate(data, headers=headers, tablefmt="grid"))
+            break
+        else:
+            print(Fore.RED + 'Category name can only contain letters and spaces.')
+
 
 def delete_category():
     category_id = int(input(Fore.YELLOW + 'Enter category ID to delete: '))
-    category = Category.find_by_id(category_id)
-    if category:
+    try:
         Category.delete(category_id)
-        print(purple + 'Category deleted.')
-    else:
-        print(purple + 'Category not found.')
+        print(purple + f'Category with ID {category_id} deleted successfully.')
+    except IntegrityError:
+        print(Fore.RED + 'Cannot delete category because there are transactions associated with it.')
 
 
 def display_all_categories():
@@ -46,8 +61,10 @@ def find_category_by_id():
 def find_category_by_name():
     name = input(Fore.YELLOW + 'Enter category name: ')
     category = Category.find_by_name(name.lower())
+    headers = ["ID", "Name"]
     if category:
-        print(purple + str(category))
+        data = [[category.id, category.name]]
+        print(purple + tabulate(data, headers=headers, tablefmt="grid"))
     else:
         print(purple + 'Category not found.')
 
@@ -64,12 +81,14 @@ def create_transaction():
     category_id = int(input('Enter category ID: '))
     type_input = input('Enter type (income/expense): ')
     description = input('Enter description: ')
-    
-    # Convert type_input to lowercase
+
     type = type_input.lower()
 
     transaction = Transaction.create(date=date_obj, amount=amount, category_id=category_id, type=type, description=description)
-    print(purple + f'Created transaction: {transaction}')
+    print(purple + f'Transaction created:')
+    headers = ["Date", "Amount", "Category ID", "Type", "Description"]
+    data = [[transaction.date, transaction.amount, transaction.category_id, transaction.type, transaction.description]]
+    print(purple + tabulate(data, headers=headers, tablefmt="grid"))
 
 def delete_transaction():
     transaction_id = int(input(Fore.YELLOW + 'Enter transaction ID to delete: '))
@@ -85,18 +104,23 @@ def display_all_transactions():
 def find_transaction_by_id():
     transaction_id = int(input(Fore.YELLOW + 'Enter transaction ID: '))
     transaction = Transaction.find_by_id(transaction_id)
+    headers = ["Date", "Amount", "Category", "Type", "Description"]
     if transaction:
-        print(purple + str(transaction))
+        data = [[transaction.date, transaction.amount, transaction.category.name, transaction.type, transaction.description]]
+        print(purple + tabulate(data, headers=headers, tablefmt="grid"))
     else:
         print(purple + 'Transaction not found.')
 
 def find_transaction_by_description():
     description = input(Fore.YELLOW + 'Enter transaction description: ')
     transaction = Transaction.find_by_description(description.lower())
+    headers = ["Date", "Amount", "Category", "Type", "Description"]
     if transaction:
-        print(purple + str(transaction))
+        data = [[transaction.date, transaction.amount, transaction.category.name, transaction.type, transaction.description]]
+        print(purple + tabulate(data, headers=headers, tablefmt="grid"))
     else:
         print(purple + 'Transaction not found.')
+
 
 def display_total_categories():
     total = Category.total_categories()

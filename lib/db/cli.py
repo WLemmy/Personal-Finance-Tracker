@@ -14,25 +14,31 @@ from helpers import (
     display_total_transactions_per_category,
     
 )
+from colorama import init, Fore, Style
+
+init(autoreset=True)
+
+def print_menu():
+    print(Fore.GREEN + '1. Create Category')
+    print(Fore.GREEN + '2. Delete Category')
+    print(Fore.GREEN + '3. Display All Categories')
+    print(Fore.GREEN + '4. Find Category by ID')
+    print(Fore.GREEN + '5. Find Category by Name')
+    print(Fore.GREEN + '6. Create Transaction')
+    print(Fore.GREEN + '7. Delete Transaction')
+    print(Fore.GREEN + '8. Display All Transactions')
+    print(Fore.GREEN + '9. Find Transaction by ID')
+    print(Fore.GREEN + '10. Find Transaction by Description')
+    print(Fore.GREEN + '11. Display Total Categories')
+    print(Fore.GREEN + '12. Display Total Transactions')
+    print(Fore.GREEN + '13. Display Total Transactions per Category')
+    print(Fore.RED + '0. Exit')
+
 
 if __name__ == '__main__':
-    while True:
-        print('1. Create Category')
-        print('2. Delete Category')
-        print('3. Display All Categories')
-        print('4. Find Category by ID')
-        print('5. Find Category by Name')
-        print('6. Create Transaction')
-        print('7. Delete Transaction')
-        print('8. Display All Transactions')
-        print('9. Find Transaction by ID')
-        print('10. Find Transaction by Description')
-        print('11. Display Total Categories')
-        print('12. Display Total Transactions')
-        print('13. Display Total Transactions Per Category')
-        print('0. Exit')
-
-        choice = input('Choose an option: ')
+     while True:
+        print_menu()
+        choice = input(Fore.YELLOW + 'Choose an option: ')
         if choice == '1':
             create_category()
         elif choice == '2':
@@ -60,7 +66,10 @@ if __name__ == '__main__':
         elif choice == '13':
             display_total_transactions_per_category()
         elif choice == '0':
-            print('Goodbye! ✋🏼')
+            print(Fore.CYAN + 'Goodbye! ✋🏼')
             break
         else:
-            print('Invalid choice. Please try again.')    
+            print(Fore.RED + 'Invalid choice. Please try again.')
+       
+
+        

@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+
 engine = create_engine('sqlite:///finance_tracker.db')
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -39,7 +40,9 @@ class Category(Base):
     
     @classmethod
     def find_by_name(cls, name):
-        return session.query(cls).filter(cls.name.ilike(f'%{name}%')).first()
+        lowercase_name = name.lower()
+        return session.query(cls).filter(func.lower(cls.name) == lowercase_name).first()
+
     
     @classmethod
     def total_categories(cls):
@@ -50,8 +53,8 @@ class Category(Base):
         return session.query(cls.name, func.count(Transaction.id)).join(Transaction).group_by(cls.name).all()
 
 
-    def _repr_(self):
-        return f'<Category(name={self.name})>'
+    def __repr__(self):
+        return f'<Category(id={self.id}, name={self.name})>'
 
 class Transaction(Base):
     __tablename__ = 'transactions'
@@ -92,5 +95,5 @@ class Transaction(Base):
     def total_transactions(cls):
         return session.query(func.count(cls.id)).scalar()
     
-    def _repr_(self):
-        return f'<Transaction(date={self.date}, amount={self.amount}, category={self.category.name}, type={self.type}, description={self.description})>'
+    def __repr__(self):
+        return f'<Transaction(id={self.id}, date={self.date}, amount={self.amount}, category={self.category.name}, type={self.type}, description={self.description})>'
