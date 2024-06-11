@@ -3,6 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import date
 
+print("🌱 Seeding..")
+
 engine = create_engine('sqlite:///finance_tracker.db')
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -24,3 +26,5 @@ transactions = [
 
 session.add_all(transactions)
 session.commit()
+
+print("🌱 Seeding complete!")
