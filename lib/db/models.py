@@ -61,4 +61,37 @@ class Transaction(Base):
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     type = Column(Enum('income', 'expense', name='transaction_type'), nullable=False)
     description = Column(String)
+    
+    @classmethod
+    def create(cls, date, amount, category_id, type, description):
+        transaction = cls(date=date, amount=amount, category_id=category_id, type=type, description=description)
+        session.add(transaction)
+        session.commit()
+        return transaction
+    
+    @classmethod
+    def delete(cls, transaction_id):
+        transaction = session.query(cls).get(transaction_id)
+        if transaction:
+            session.delete(transaction)
+            session.commit()
+
+    @classmethod
+    def get_all(cls):
+        return session.query(cls).all()
+    
+    @classmethod
+    def find_by_id(cls, transaction_id):
+        return session.query(cls).get(transaction_id)
+    
+    @classmethod
+    def find_by_description(cls, description):
+        return session.query(cls).filter(cls.description.ilike(f'%{description}%')).first()
+    
+    @classmethod
+    def total_transactions(cls):
+        return session.query(func.count(cls.id)).scalar()
+    
+    def _repr_(self):
+        return f'<Transaction(date={self.date}, amount={self.amount}, category={self.category.name}, type={self.type}, description={self.description})>'
 
