@@ -8,3 +8,9 @@ engine = create_engine('sqlite:///practice-finance.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
+
+class Category(Base):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    transactions = relationship('Transaction', backref='category')
