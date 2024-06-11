@@ -14,3 +14,20 @@ from helpers import (
     display_total_transactions_per_category,
     
 )
+
+if __name__ == '__main__':
+    while True:
+        print('1. Create Category')
+        print('2. Delete Category')
+        print('3. Display All Categories')
+        print('4. Find Category by ID')
+        print('5. Find Category by Name')
+        print('6. Create Transaction')
+        print('7. Delete Transaction')
+        print('8. Display All Transactions')
+        print('9. Find Transaction by ID')
+        print('10. Find Transaction by Description')
+        print('11. Display Total Categories')
+        print('12. Display Total Transactions')
+        print('13. Display Total Transactions Per Category')
+        print('0. Exit')
