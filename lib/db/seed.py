@@ -6,3 +6,13 @@ from datetime import date
 engine = create_engine('sqlite:///finance_tracker.db')
 Session = sessionmaker(bind=engine)
 session = Session()
+
+categories = [
+    Category(name='Food'),
+    Category(name='Utilities'),
+    Category(name='Entertainment'),
+    Category(name='Salary'),
+]
+
+session.add_all(categories)
+session.commit()
