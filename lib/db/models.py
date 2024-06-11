@@ -14,3 +14,12 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     transactions = relationship('Transaction', backref='category')
+
+class Transaction(Base):
+    __tablename__ = 'transactions'
+    id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    amount = Column(Float, nullable=False)
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
+    type = Column(Enum('income', 'expense', name='transaction_type'), nullable=False)
+    description = Column(String)
