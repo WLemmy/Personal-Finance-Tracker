@@ -15,6 +15,44 @@ class Category(Base):
     name = Column(String, nullable=False)
     transactions = relationship('Transaction', backref='category')
 
+    @classmethod
+    def create(cls, name):
+        category = cls(name=name)
+        session.add(category)
+        session.commit()
+        return category
+    
+    @classmethod
+    def delete(cls, category_id):
+        category = session.query(cls).get(category_id)
+        if category:
+            session.delete(category)
+            session.commit()
+
+    @classmethod
+    def get_all(cls):
+        return session.query(cls).all()
+    
+    @classmethod
+    def find_by_id(cls, category_id):
+        return session.query(cls).get(category_id)
+    
+    @classmethod
+    def find_by_name(cls, name):
+        return session.query(cls).filter(cls.name.ilike(f'%{name}%')).first()
+    
+    @classmethod
+    def total_categories(cls):
+        return session.query(func.count(cls.id)).scalar()
+
+    @classmethod
+    def total_transactions_per_category(cls):
+        return session.query(cls.name, func.count(Transaction.id)).join(Transaction).group_by(cls.name).all()
+
+
+    def _repr_(self):
+        return f'<Category(name={self.name})>'
+
 class Transaction(Base):
     __tablename__ = 'transactions'
     id = Column(Integer, primary_key=True)
@@ -23,3 +61,4 @@ class Transaction(Base):
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     type = Column(Enum('income', 'expense', name='transaction_type'), nullable=False)
     description = Column(String)
+
