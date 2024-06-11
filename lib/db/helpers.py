@@ -2,7 +2,11 @@ from models import Category, Transaction
 from datetime import date
 from colorama import Fore, Style, init
 from datetime import datetime
+from tabulate import tabulate
 
+init(autoreset=True)
+
+purple = Fore.MAGENTA  # Define a new Fore color for purple
 
 def create_category():
     name = input(Fore.YELLOW + 'Enter category name: ')
