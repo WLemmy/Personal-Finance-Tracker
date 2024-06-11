@@ -16,3 +16,11 @@ categories = [
 
 session.add_all(categories)
 session.commit()
+
+transactions = [
+    Transaction(date=date(2024, 6, 5), amount=1000, category_id=categories[3].id, type='income', description='Monthly salary'),
+    Transaction(date=date(2024, 6, 6), amount=50, category_id=categories[0].id, type='expense', description='Groceries'),
+]
+
+session.add_all(transactions)
+session.commit()
