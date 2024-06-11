@@ -7,5 +7,4 @@ from sqlalchemy.orm import sessionmaker
 engine = create_engine('sqlite:///practice-finance.db')
 Session = sessionmaker(bind=engine)
 session = Session()
-
 Base = declarative_base()
